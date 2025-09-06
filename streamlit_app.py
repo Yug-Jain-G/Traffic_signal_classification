@@ -58,6 +58,7 @@ st.markdown(
         backdrop-filter: blur(10px);
         text-align: center;
         margin-top: 1rem;
+        box-shadow: 0px 4px 12px rgba(0,0,0,0.2);
     }
     </style>
     """,
@@ -93,10 +94,12 @@ uploaded_file = st.file_uploader("📤 Upload a traffic sign image", type=["jpg"
 if uploaded_file is not None:
     col1, col2 = st.columns([1, 1])
 
-    # Show uploaded image
+    # Show uploaded image (smaller + centered)
     with col1:
         image = Image.open(uploaded_file).convert("RGB")
-        st.image(image, caption="🖼 Uploaded Image", use_column_width=True)
+        st.markdown("<div style='text-align:center;'>", unsafe_allow_html=True)
+        st.image(image, caption="🖼 Uploaded Image", width=250)
+        st.markdown("</div>", unsafe_allow_html=True)
 
     # Preprocess
     img = image.resize((50, 50))
@@ -108,14 +111,16 @@ if uploaded_file is not None:
     predicted_class = CLASS_NAMES[np.argmax(predictions)]
     confidence = np.max(predictions)
 
-    # Display Prediction Card
+    # Display Prediction Card (centered)
     with col2:
         st.markdown(
             f"""
-            <div class='prediction-card'>
-                <h2>✅ Prediction</h2>
-                <h3 style="color:#FFD700;">{predicted_class}</h3>
-                <p><b>Confidence:</b> {confidence:.2%}</p>
+            <div style="display:flex; justify-content:center; align-items:center; height:100%;">
+                <div class='prediction-card' style="width:100%; max-width:400px; margin:auto;">
+                    <h2 style="color:#00FF7F; margin-bottom:10px;">✅ Prediction</h2>
+                    <h1 style="color:#FFD700; font-size:2.5em; margin:0;">{predicted_class}</h1>
+                    <p style="font-size:1.1em;"><b>Confidence:</b> {confidence:.2%}</p>
+                </div>
             </div>
             """,
             unsafe_allow_html=True,
